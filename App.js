@@ -8,10 +8,12 @@ let breakDec = document.getElementById("break-decrement");
 let sessionInc = document.getElementById("session-increment");
 let sessionDec = document.getElementById("session-decrement");
 let incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
+let timerLabel = document.getElementById("timer-label");
+let beep = document.getElementById("beep");
 let toggleOnOff = false;
 let interval = 0;
 let onBreak = false;
-let time = onBreak ? breakLength.innerHTML * 60 : sessionLength.innerHTML * 60;
+let time = sessionLength.innerHTML * 60;
 
 //increment/decrement buttons
 let updateTimeLeft = () => {
@@ -32,42 +34,41 @@ let updateTimeLeft = () => {
 incrementButtons.map((button) => {
   let breakOrSession = button.id.includes("session") ? "session" : "break";
   let plusMinus = button.id.includes("increment") ? "++" : "--";
-
   button.addEventListener("click", () => {
-    eval(`${breakOrSession}Length.innerHTML${plusMinus}`);
-    updateTimeLeft();
+    let length = breakOrSession + "Length" + ".innerHTML";
+    let inputTime = eval(`${length}`);
+    if (inputTime > 1 && inputTime < 60) {
+      eval(`${length}${plusMinus}`);
+      updateTimeLeft();
+    } else if (inputTime == 1 && button.id.includes("increment")) {
+      eval(`${length}++`);
+      updateTimeLeft();
+    } else if (inputTime == 60 && button.id.includes("decrement")) {
+      eval(`${length}--`);
+      updateTimeLeft();
+    }
   });
 });
 
-// @marko todo - Delete below when satisified with refactored code above
-// breakInc.addEventListener("click", () => {
-//   breakLength.innerHTML++;
-//   updateTimeLeft();
-// });
-
-// breakDec.addEventListener("click", () => {
-//   breakLength.innerHTML--;
-//   updateTimeLeft();
-// });
-
-// sessionInc.addEventListener("click", () => {
-//   sessionLength.innerHTML++;
-//   updateTimeLeft();
-// });
-
-// sessionDec.addEventListener("click", () => {
-//   sessionLength.innerHTML--;
-//   updateTimeLeft();
-// });
-
 //decrements total time by one second
 let updateTime = () => {
-  time--;
-  let minutes = Math.floor(time / 60);
-  let seconds = time % 60;
-  timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
-    seconds < 10 ? "0" + seconds : seconds
-  }`;
+  if (time == 0) {
+    onBreak = !onBreak;
+    onBreak
+      ? (timerLabel.innerHTML = "Break")
+      : (timerLabel.innerHTML = "Session");
+    time = onBreak
+      ? breakLength.innerHTML * 60 + 1
+      : sessionLength.innerHTML * 60 + 1;
+    beep.play();
+  } else {
+    time--;
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
+      seconds < 10 ? "0" + seconds : seconds
+    }`;
+  }
 };
 
 //handle start stop
@@ -99,4 +100,10 @@ reset.addEventListener("click", () => {
   startStop.innerHTML = "Start";
   //reset time
   time = sessionLength.innerHTML * 60;
+  //reset timer label to Session
+  onBreak = false;
+  timerLabel.innerHTML = "Session";
+  // pause audio and rewind it
+  beep.pause();
+  beep.currentTime = 0;
 });

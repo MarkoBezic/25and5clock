@@ -8,39 +8,33 @@ let breakDec = document.getElementById("break-decrement");
 let sessionInc = document.getElementById("session-increment");
 let sessionDec = document.getElementById("session-decrement");
 let incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
-let holdSessionLength = 25;
-let holdBreakLength = 5;
 let toggleOnOff = false;
 let interval = 0;
 let onBreak = false;
-let time = onBreak ? holdBreakLength * 60 : holdSessionLength * 60;
+let time = onBreak ? breakLength.innerHTML * 60 : sessionLength.innerHTML * 60;
 
 //increment/decrement buttons
 let updateTimeLeft = () => {
+  let breakTime = breakLength.innerHTML;
+  let sessionTime = sessionLength.innerHTML;
   if (onBreak) {
-    timeLeft.innerHTML = `${breakLength.innerHTML}:00`;
+    timeLeft.innerHTML = `${breakTime < 10 ? "0" + breakTime : breakTime}:00`;
     time = breakLength.innerHTML * 60;
   } else {
-    timeLeft.innerHTML = `${sessionLength.innerHTML}:00`;
+    timeLeft.innerHTML = `${
+      sessionTime < 10 ? "0" + sessionTime : sessionTime
+    }:00`;
     time = sessionLength.innerHTML * 60;
   }
-};
-let storeSessionLength = () => {
-  holdSessionLength = sessionLength.innerHTML;
-};
-let storeBreakLength = () => {
-  holdBreakLength = breakLength.innerHTML;
 };
 
 //increment and decrement button functionality (refactored)
 incrementButtons.map((button) => {
-  let storeBreakOrSession = button.id.includes("session") ? "Session" : "Break";
   let breakOrSession = button.id.includes("session") ? "session" : "break";
   let plusMinus = button.id.includes("increment") ? "++" : "--";
 
   button.addEventListener("click", () => {
     eval(`${breakOrSession}Length.innerHTML${plusMinus}`);
-    eval(`store${storeBreakOrSession}Length()`);
     updateTimeLeft();
   });
 });
@@ -48,25 +42,21 @@ incrementButtons.map((button) => {
 // @marko todo - Delete below when satisified with refactored code above
 // breakInc.addEventListener("click", () => {
 //   breakLength.innerHTML++;
-//   storeBreakLength();
 //   updateTimeLeft();
 // });
 
 // breakDec.addEventListener("click", () => {
 //   breakLength.innerHTML--;
-//   storeBreakLength();
 //   updateTimeLeft();
 // });
 
 // sessionInc.addEventListener("click", () => {
 //   sessionLength.innerHTML++;
-//   storeSessionLength();
 //   updateTimeLeft();
 // });
 
 // sessionDec.addEventListener("click", () => {
 //   sessionLength.innerHTML--;
-//   storeSessionLength();
 //   updateTimeLeft();
 // });
 
@@ -94,12 +84,14 @@ startStop.addEventListener("click", () => {
 
 ///handle reset
 reset.addEventListener("click", () => {
+  //stop timer
+  clearInterval(interval);
   //breakLength should return 5
-  breakLength.innerHTML = holdBreakLength;
+  breakLength.innerHTML = 5;
   //sessionLength should return to 25
-  sessionLength.innerHTML = holdSessionLength;
+  sessionLength.innerHTML = 25;
   //timeLeft should reset to default state
-  timeLeft.innerHTML = `${holdSessionLength}:00`;
+  timeLeft.innerHTML = "25:00";
   //clear interval
   clearInterval(interval);
   //set timer back to off

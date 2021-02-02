@@ -7,6 +7,7 @@ let breakInc = document.getElementById("break-increment");
 let breakDec = document.getElementById("break-decrement");
 let sessionInc = document.getElementById("session-increment");
 let sessionDec = document.getElementById("session-decrement");
+let incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
 let holdSessionLength = 25;
 let holdBreakLength = 5;
 let toggleOnOff = false;
@@ -14,11 +15,8 @@ let interval = 0;
 let onBreak = false;
 let time = onBreak ? holdBreakLength * 60 : holdSessionLength * 60;
 
-// let startingMinutes = Math.floor(time / 60);
-// let startingSeconds = time % 60;
-
 //increment/decrement buttons
-let inputTime = () => {
+let updateTimeLeft = () => {
   if (onBreak) {
     timeLeft.innerHTML = `${breakLength.innerHTML}:00`;
     time = breakLength.innerHTML * 60;
@@ -30,26 +28,47 @@ let inputTime = () => {
 let storeSessionLength = () => {
   holdSessionLength = sessionLength.innerHTML;
 };
+let storeBreakLength = () => {
+  holdBreakLength = breakLength.innerHTML;
+};
 
-breakInc.addEventListener("click", () => {
-  breakLength.innerHTML++;
+//increment and decrement button functionality (refactored)
+incrementButtons.map((button) => {
+  let storeBreakOrSession = button.id.includes("session") ? "Session" : "Break";
+  let breakOrSession = button.id.includes("session") ? "session" : "break";
+  let plusMinus = button.id.includes("increment") ? "++" : "--";
+
+  button.addEventListener("click", () => {
+    eval(`${breakOrSession}Length.innerHTML${plusMinus}`);
+    eval(`store${storeBreakOrSession}Length()`);
+    updateTimeLeft();
+  });
 });
 
-breakDec.addEventListener("click", () => {
-  breakLength.innerHTML--;
-});
+// @marko todo - Delete below when satisified with refactored code above
+// breakInc.addEventListener("click", () => {
+//   breakLength.innerHTML++;
+//   storeBreakLength();
+//   updateTimeLeft();
+// });
 
-sessionInc.addEventListener("click", () => {
-  sessionLength.innerHTML++;
-  storeSessionLength();
-  inputTime();
-});
+// breakDec.addEventListener("click", () => {
+//   breakLength.innerHTML--;
+//   storeBreakLength();
+//   updateTimeLeft();
+// });
 
-sessionDec.addEventListener("click", () => {
-  sessionLength.innerHTML--;
-  storeSessionLength();
-  inputTime();
-});
+// sessionInc.addEventListener("click", () => {
+//   sessionLength.innerHTML++;
+//   storeSessionLength();
+//   updateTimeLeft();
+// });
+
+// sessionDec.addEventListener("click", () => {
+//   sessionLength.innerHTML--;
+//   storeSessionLength();
+//   updateTimeLeft();
+// });
 
 //decrements total time by one second
 let updateTime = () => {

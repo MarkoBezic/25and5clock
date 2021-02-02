@@ -1,0 +1,30 @@
+// * {
+//   border: 1px solid red;
+// }
+
+.title {
+  font-weight: 800;
+  font-size: 35px;
+}
+
+.timer {
+  width: 380px;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.inner-timer {
+  width: 330px;
+}
+
+#timer-label {
+  font-size: 30px;
+  font-weight: 700;
+}
+
+#time-left {
+  font-size: 60px;
+  font-weight: 900;
+}

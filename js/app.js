@@ -3,6 +3,7 @@ let reset = document.getElementById("reset");
 let breakLength = document.getElementById("break-length");
 let sessionLength = document.getElementById("session-length");
 let timeLeft = document.getElementById("time-left");
+let timeLeftTab = document.getElementById("title-tab");
 let breakInc = document.getElementById("break-increment");
 let breakDec = document.getElementById("break-decrement");
 let sessionInc = document.getElementById("session-increment");
@@ -21,9 +22,16 @@ let updateTimeLeft = () => {
   let sessionTime = sessionLength.innerHTML;
   if (onBreak) {
     timeLeft.innerHTML = `${breakTime < 10 ? "0" + breakTime : breakTime}:00`;
+    timeLeftTab.innerHTML = `${
+      breakTime < 10 ? "0" + breakTime : breakTime
+    }:00`;
+
     time = breakLength.innerHTML * 60;
   } else {
     timeLeft.innerHTML = `${
+      sessionTime < 10 ? "0" + sessionTime : sessionTime
+    }:00`;
+    timeLeftTab.innerHTML = `${
       sessionTime < 10 ? "0" + sessionTime : sessionTime
     }:00`;
     time = sessionLength.innerHTML * 60;
@@ -68,6 +76,9 @@ let updateTime = () => {
     timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
       seconds < 10 ? "0" + seconds : seconds
     }`;
+    timeLeftTab.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
+      seconds < 10 ? "0" + seconds : seconds
+    }`;
   }
 };
 
@@ -93,6 +104,8 @@ reset.addEventListener("click", () => {
   sessionLength.innerHTML = 25;
   //timeLeft should reset to default state
   timeLeft.innerHTML = "25:00";
+  timeLeftTab.innerHTML = "25:00";
+
   //clear interval
   clearInterval(interval);
   //set timer back to off

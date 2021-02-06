@@ -4,12 +4,20 @@
 }
 
 button {
+  padding: 4px;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
   box-shadow: 0px 4px;
+  border: none;
 }
 button:active {
   margin-bottom: none;
   box-shadow: none;
   transform: translateY(4px);
+}
+button:focus {
+  outline: none;
 }
 
 .timer {

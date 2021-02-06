@@ -24,7 +24,7 @@ let updateTimeLeft = () => {
     timeLeft.innerHTML = `${breakTime < 10 ? "0" + breakTime : breakTime}:00`;
     timeLeftTab.innerHTML = `${
       breakTime < 10 ? "0" + breakTime : breakTime
-    }:00`;
+    }:00 Break`;
 
     time = breakLength.innerHTML * 60;
   } else {
@@ -33,7 +33,7 @@ let updateTimeLeft = () => {
     }:00`;
     timeLeftTab.innerHTML = `${
       sessionTime < 10 ? "0" + sessionTime : sessionTime
-    }:00`;
+    }:00 Focus`;
     time = sessionLength.innerHTML * 60;
   }
 };
@@ -78,7 +78,7 @@ let updateTime = () => {
     }`;
     timeLeftTab.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
       seconds < 10 ? "0" + seconds : seconds
-    }`;
+    } ${onBreak ? "Break" : "Focus"}`;
   }
 };
 
@@ -104,7 +104,7 @@ reset.addEventListener("click", () => {
   sessionLength.innerHTML = 25;
   //timeLeft should reset to default state
   timeLeft.innerHTML = "25:00";
-  timeLeftTab.innerHTML = "25:00";
+  timeLeftTab.innerHTML = "25:00" + " Focus";
 
   //clear interval
   clearInterval(interval);

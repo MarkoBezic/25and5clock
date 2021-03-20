@@ -11,7 +11,7 @@ let sessionDec = document.getElementById("session-decrement");
 let incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
 let timerLabel = document.getElementById("timer-label");
 let beep = document.getElementById("beep");
-let toggleOnOff = false;
+let timerIsRunning = false;
 let interval = 0;
 let onBreak = false;
 let time = sessionLength.innerHTML * 60;
@@ -84,8 +84,8 @@ let updateTime = () => {
 
 //handle start stop
 startStop.addEventListener("click", () => {
-  toggleOnOff = !toggleOnOff;
-  if (toggleOnOff) {
+  timerIsRunning = !timerIsRunning;
+  if (timerIsRunning) {
     interval = setInterval(updateTime, 1000);
     startStop.innerHTML = "Stop";
   } else {

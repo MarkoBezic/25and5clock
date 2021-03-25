@@ -1,23 +1,49 @@
-let startStop = document.getElementById("start_stop");
-let reset = document.getElementById("reset");
-let breakLength = document.getElementById("break-length");
-let sessionLength = document.getElementById("session-length");
-let timeLeft = document.getElementById("time-left");
-let timeLeftTab = document.getElementById("title-tab");
-let breakInc = document.getElementById("break-increment");
-let breakDec = document.getElementById("break-decrement");
-let sessionInc = document.getElementById("session-increment");
-let sessionDec = document.getElementById("session-decrement");
-let incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
-let timerLabel = document.getElementById("timer-label");
-let beep = document.getElementById("beep");
-let toggleOnOff = false;
-let interval = 0;
+const startStop = document.getElementById("start_stop");
+const reset = document.getElementById("reset");
+const breakLength = document.getElementById("break-length");
+const sessionLength = document.getElementById("session-length");
+const timeLeft = document.getElementById("time-left");
+const timeLeftTab = document.getElementById("title-tab");
+const breakInc = document.getElementById("break-increment");
+const breakDec = document.getElementById("break-decrement");
+const sessionInc = document.getElementById("session-increment");
+const sessionDec = document.getElementById("session-decrement");
+const incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
+const timerLabel = document.getElementById("timer-label");
+const beep = document.getElementById("beep");
+let timerIsRunning = false;
 let onBreak = false;
 let time = sessionLength.innerHTML * 60;
+let time2 = 25 * 60;
+
+///////adjust to account for setInterval's drift//////////
+///// taken from: https://www.reddit.com/r/learnjavascript/comments/3aqtzf/issue_with_setinterval_function_losing_accuracy/ /////
+///// posted by user: birjolaxew
+
+function customSetInterval(func, time) {
+  var lastTime = Date.now(),
+    lastDelay = time,
+    outp = {};
+
+  function tick() {
+    func();
+
+    var now = Date.now(),
+      dTime = now - lastTime;
+
+    lastTime = now;
+    lastDelay = time + lastDelay - dTime;
+    outp.id = setTimeout(tick, lastDelay);
+  }
+  outp.id = setTimeout(tick, time);
+
+  return outp;
+}
+
+//////////////////////////////////////////////////////////
 
 //increment/decrement buttons
-let updateTimeLeft = () => {
+const updateTimeLeft = () => {
   let breakTime = breakLength.innerHTML;
   let sessionTime = sessionLength.innerHTML;
   if (onBreak) {
@@ -84,12 +110,12 @@ let updateTime = () => {
 
 //handle start stop
 startStop.addEventListener("click", () => {
-  toggleOnOff = !toggleOnOff;
-  if (toggleOnOff) {
-    interval = setInterval(updateTime, 1000);
+  timerIsRunning = !timerIsRunning;
+  if (timerIsRunning) {
+    runtimer = customSetInterval(updateTime, 1000);
     startStop.innerHTML = "Stop";
   } else {
-    clearInterval(interval);
+    clearInterval(runtimer.id);
     startStop.innerHTML = "Start";
   }
 });
@@ -97,7 +123,7 @@ startStop.addEventListener("click", () => {
 ///handle reset
 reset.addEventListener("click", () => {
   //stop timer
-  clearInterval(interval);
+  clearInterval(runtimer.id);
   //breakLength should return 5
   breakLength.innerHTML = 5;
   //sessionLength should return to 25
@@ -106,10 +132,8 @@ reset.addEventListener("click", () => {
   timeLeft.innerHTML = "25:00";
   timeLeftTab.innerHTML = "25:00" + " Focus";
 
-  //clear interval
-  clearInterval(interval);
   //set timer back to off
-  toggleOnOff = false;
+  timerIsRunning = false;
   startStop.innerHTML = "Start";
   //reset time
   time = sessionLength.innerHTML * 60;

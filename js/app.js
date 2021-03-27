@@ -135,7 +135,7 @@ let updateTime = () => {
 startStop.addEventListener("click", () => {
   timerIsRunning = !timerIsRunning;
   if (timerIsRunning) {
-    runtimer = customSetInterval(updateTime, 1000);
+    runtimer = customSetInterval(updateTime, 100);
     startStop.innerHTML = "Stop";
   } else {
     clearInterval(runtimer.id);
@@ -163,6 +163,9 @@ reset.addEventListener("click", () => {
   //reset timer label to Session
   onBreak = false;
   timerLabel.innerHTML = "Session";
+  //reset background color
+  body.classList.add("bg-info");
+  body.classList.remove("bg-danger");
   // pause audio and rewind it
   beep.pause();
   beep.currentTime = 0;

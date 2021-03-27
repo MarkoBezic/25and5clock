@@ -11,6 +11,7 @@ const sessionDec = document.getElementById("session-decrement");
 const incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
 const timerLabel = document.getElementById("timer-label");
 const beep = document.getElementById("beep");
+const body = document.getElementById("body");
 let timerIsRunning = false;
 let onBreak = false;
 let time = sessionLength.innerHTML * 60;
@@ -51,7 +52,6 @@ const updateTimeLeft = () => {
     timeLeftTab.innerHTML = `${
       breakTime < 10 ? "0" + breakTime : breakTime
     }:00 Break`;
-
     time = breakLength.innerHTML * 60;
   } else {
     timeLeft.innerHTML = `${
@@ -83,28 +83,51 @@ incrementButtons.map((button) => {
     }
   });
 });
+//change background color
+let changeBackgroundColor = () => {
+  if (onBreak) {
+    body.classList.add("bg-danger");
+    body.classList.remove("bg-info");
+  } else {
+    body.classList.add("bg-info");
+    body.classList.remove("bg-danger");
+  }
+};
+//set timer label
+let setTimerLabel = () => {
+  onBreak
+    ? (timerLabel.innerHTML = "Break")
+    : (timerLabel.innerHTML = "Session");
+};
+// set remaining time
+let setRemainingTime = () => {
+  time = onBreak
+    ? breakLength.innerHTML * 60 + 1
+    : sessionLength.innerHTML * 60 + 1;
+};
+//decrement time by one second
+let decrementTimeByOneSecond = () => {
+  time--;
+  let minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+  timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
+    seconds < 10 ? "0" + seconds : seconds
+  }`;
+  timeLeftTab.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
+    seconds < 10 ? "0" + seconds : seconds
+  } ${onBreak ? "Break" : "Focus"}`;
+};
 
 //decrements total time by one second
 let updateTime = () => {
   if (time == 0) {
     onBreak = !onBreak;
-    onBreak
-      ? (timerLabel.innerHTML = "Break")
-      : (timerLabel.innerHTML = "Session");
-    time = onBreak
-      ? breakLength.innerHTML * 60 + 1
-      : sessionLength.innerHTML * 60 + 1;
+    setTimerLabel();
+    setRemainingTime();
     beep.play();
+    changeBackgroundColor();
   } else {
-    time--;
-    let minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-    timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
-      seconds < 10 ? "0" + seconds : seconds
-    }`;
-    timeLeftTab.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
-      seconds < 10 ? "0" + seconds : seconds
-    } ${onBreak ? "Break" : "Focus"}`;
+    decrementTimeByOneSecond();
   }
 };
 

@@ -135,7 +135,7 @@ let updateTime = () => {
 startStop.addEventListener("click", () => {
   timerIsRunning = !timerIsRunning;
   if (timerIsRunning) {
-    runtimer = customSetInterval(updateTime, 100);
+    runtimer = customSetInterval(updateTime, 1000);
     startStop.innerHTML = "Stop";
   } else {
     clearInterval(runtimer.id);

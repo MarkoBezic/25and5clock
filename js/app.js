@@ -84,48 +84,18 @@ incrementButtons.map((button) => {
     }
   });
 });
-//change background color
-let changeBackgroundColor = () => {
-  if (onBreak) {
-    body.classList.add("bg-danger");
-    body.classList.remove("bg-info");
-  } else {
-    body.classList.add("bg-info");
-    body.classList.remove("bg-danger");
-  }
-};
-//set timer label
-let setTimerLabel = () => {
-  onBreak
-    ? (timerLabel.innerHTML = "Break")
-    : (timerLabel.innerHTML = "Session");
-};
-// set remaining time
-let setRemainingTime = () => {
-  time = onBreak
-    ? breakLength.innerHTML * 60 + 1
-    : sessionLength.innerHTML * 60 + 1;
-};
-//decrement time by one second
-let decrementTimeByOneSecond = () => {
-  time--;
-  let minutes = Math.floor(time / 60);
-  let seconds = time % 60;
-  timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
-    seconds < 10 ? "0" + seconds : seconds
-  }`;
-  timeLeftTab.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
-    seconds < 10 ? "0" + seconds : seconds
-  } ${onBreak ? "Break" : "Focus"}`;
-};
 
-let playAlertSound = () => {
-  if (onBreak) {
-    beep.play();
+//handle start stop
+startStop.addEventListener("click", () => {
+  timerIsRunning = !timerIsRunning;
+  if (timerIsRunning) {
+    runtimer = customSetInterval(updateTime, 1000);
+    startStop.innerHTML = "Stop";
   } else {
-    gong.play();
+    clearInterval(runtimer.id);
+    startStop.innerHTML = "Start";
   }
-};
+});
 
 //decrements total time by one second
 let updateTime = () => {
@@ -140,26 +110,61 @@ let updateTime = () => {
   }
 };
 
-//handle start stop
-startStop.addEventListener("click", () => {
-  timerIsRunning = !timerIsRunning;
-  if (timerIsRunning) {
-    runtimer = customSetInterval(updateTime, 1000);
-    startStop.innerHTML = "Stop";
+let setTimerLabel = () => {
+  onBreak
+    ? (timerLabel.innerHTML = "Break")
+    : (timerLabel.innerHTML = "Session");
+};
+
+let setRemainingTime = () => {
+  time = onBreak
+    ? breakLength.innerHTML * 60 + 1
+    : sessionLength.innerHTML * 60 + 1;
+};
+
+let playAlertSound = () => {
+  if (onBreak) {
+    beep.play();
   } else {
-    clearInterval(runtimer.id);
-    startStop.innerHTML = "Start";
+    gong.play();
   }
-});
+};
+
+//change background color
+let changeBackgroundColor = () => {
+  if (onBreak) {
+    body.classList.add("bg-danger");
+    body.classList.remove("bg-info");
+  } else {
+    body.classList.add("bg-info");
+    body.classList.remove("bg-danger");
+  }
+};
+
+//decrement time by one second
+let decrementTimeByOneSecond = () => {
+  time--;
+  let minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+  timeLeft.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
+    seconds < 10 ? "0" + seconds : seconds
+  }`;
+  timeLeftTab.innerHTML = `${minutes < 10 ? "0" + minutes : minutes}:${
+    seconds < 10 ? "0" + seconds : seconds
+  } ${onBreak ? "Break" : "Focus"}`;
+};
 
 ///handle reset
 reset.addEventListener("click", () => {
   //stop timer
   clearInterval(runtimer.id);
+
   //breakLength should return 5
   breakLength.innerHTML = 5;
+
   //sessionLength should return to 25
   sessionLength.innerHTML = 25;
+
   //timeLeft should reset to default state
   timeLeft.innerHTML = "25:00";
   timeLeftTab.innerHTML = "25:00" + " Focus";
@@ -167,15 +172,21 @@ reset.addEventListener("click", () => {
   //set timer back to off
   timerIsRunning = false;
   startStop.innerHTML = "Start";
+
   //reset time
   time = sessionLength.innerHTML * 60;
+
   //reset timer label to Session
   onBreak = false;
   timerLabel.innerHTML = "Session";
+
   //reset background color
   body.classList.add("bg-info");
   body.classList.remove("bg-danger");
+
   // pause audio and rewind it
   beep.pause();
   beep.currentTime = 0;
+  gong.pause();
+  gong.currentTime = 0;
 });

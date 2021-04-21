@@ -11,6 +11,7 @@ const sessionDec = document.getElementById("session-decrement");
 const incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
 const timerLabel = document.getElementById("timer-label");
 const beep = document.getElementById("beep");
+const gong = document.getElementById("gong");
 const body = document.getElementById("body");
 let timerIsRunning = false;
 let onBreak = false;
@@ -118,13 +119,21 @@ let decrementTimeByOneSecond = () => {
   } ${onBreak ? "Break" : "Focus"}`;
 };
 
+let playAlertSound = () => {
+  if (onBreak) {
+    beep.play();
+  } else {
+    gong.play();
+  }
+};
+
 //decrements total time by one second
 let updateTime = () => {
   if (time == 0) {
     onBreak = !onBreak;
     setTimerLabel();
     setRemainingTime();
-    beep.play();
+    playAlertSound();
     changeBackgroundColor();
   } else {
     decrementTimeByOneSecond();

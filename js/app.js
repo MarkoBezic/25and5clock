@@ -12,6 +12,8 @@ const incrementButtons = [sessionInc, sessionDec, breakInc, breakDec];
 const timerLabel = document.getElementById("timer-label");
 const beep = document.getElementById("beep");
 const gong = document.getElementById("gong");
+const whistle = document.getElementById("whistle");
+
 const body = document.getElementById("body");
 let timerIsRunning = false;
 let onBreak = false;
@@ -126,7 +128,7 @@ let playAlertSound = () => {
   if (onBreak) {
     beep.play();
   } else {
-    gong.play();
+    whistle.play();
   }
 };
 
@@ -187,6 +189,6 @@ reset.addEventListener("click", () => {
   // pause audio and rewind it
   beep.pause();
   beep.currentTime = 0;
-  gong.pause();
-  gong.currentTime = 0;
+  whistle.pause();
+  whistle.currentTime = 0;
 });
